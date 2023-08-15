@@ -19,10 +19,13 @@ class Device:
             3: 'Threshold central error'
         }
         state = sp1[:-1] + sp2
+
         # split previous result into pairs and convert it to binary form
         errors_binaries = [bin(int(state[i:i + 2])) for i in range(0, len(state), 2)]
+
         # of the resulting bit fields, leaves only fifth flags
         device_errors = [i[-4] if len(i) > 5 else 0 for i in errors_binaries]
+
         # mapping errors with flags
         messages = [errors[i + 1] for i in range(3) if device_errors[i] == '1']
 
@@ -30,12 +33,11 @@ class Device:
             if message not in self.error_messages:
                 self.error_messages.append(message)
 
-    def get_error_message(self):
+    def get_error_message(self) -> str:
         message = ', '.join(self.error_messages) if self.error_messages else 'Unknown device error'
-        return f'{self.device_id}: {message}'
+        return message
 
-    def __str__(self):
+    def __str__(self) -> str:
         if self.states_count is not None:
             return f'{self.device_id}: {self.states_count}'
-        else:
-            return f'{self.device_id}: {self.get_error_message()}'
+        return f'{self.device_id}: {self.get_error_message()}'
